@@ -1,6 +1,6 @@
 # DenseEdia
 
-An tool that let you store what you want, plus its API.
+A tool that let you store what you want, plus its API.
 
 ## What I wanted
 
