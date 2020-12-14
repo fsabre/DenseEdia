@@ -16,12 +16,28 @@ class Edium(db.Entity):
     links_out = orm.Set("Link", reverse="start")
     links_in = orm.Set("Link", reverse="end")
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "kind": self.kind,
+            "creation_date": self.creation_date.isoformat(),
+        }
+
 
 class Element(db.Entity):
     name = orm.Required(str)
     value = orm.Required(str)
     edium = orm.Required(Edium)
     creation_date = orm.Required(datetime, default=datetime.now)
+
+    def to_json(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "value": self.value,
+            "creation_date": self.creation_date.isoformat(),
+        }
 
 
 class Link(db.Entity):
