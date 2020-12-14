@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from pony import orm
+from pydantic import BaseModel, Field
 
 from denseedia.config import CONFIG
 
@@ -23,6 +24,10 @@ class Edium(db.Entity):
             "kind": self.kind,
             "creation_date": self.creation_date.isoformat(),
         }
+
+    class PostModel(BaseModel):
+        name: str = Field(default="")
+        kind: str = Field(min_length=1)
 
 
 class Element(db.Entity):
