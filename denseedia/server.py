@@ -37,6 +37,25 @@ def generate_get_routes(entity_class, url_base, sing_name, plural_name):
     )
 
 
+def generate_delete_route(entity_class, url_base, sing_name):
+    def delete_one_entity(entity_id):
+        try:
+            with orm.db_session:
+                entity_class[entity_id].delete()
+            return "", 204
+        except orm.ObjectNotFound:
+            return jsonify({"msg": "Non existant ID"}), 404
+
+    app.add_url_rule(
+        rule=url_base + "/<int:entity_id>",
+        endpoint=f"delete_one_{sing_name}",
+        view_func=delete_one_entity,
+        methods=["DELETE"],
+    )
+
+
+# EDIA ROUTES
+
 generate_get_routes(Edium, "/edia", "edium", "edia")
 
 
@@ -74,8 +93,17 @@ def add_edium():
         )
 
 
+generate_delete_route(Edium, "/edia", "edium")
+
+# ELEMENTS ROUTES
+
 generate_get_routes(Element, "/elements", "element", "elements")
+generate_delete_route(Element, "/elements", "element")
+
+# LINKS ROUTES
+
 generate_get_routes(Link, "/links", "link", "links")
+generate_delete_route(Link, "/links", "link")
 
 
 def run_server():

@@ -8,19 +8,19 @@
 - [ ] GET /edia/links
 - [x] POST /edia
 - [ ] PUT /edia/1
-- [ ] DELETE /edia/1
+- [x] DELETE /edia/1
 
 - [x] GET /elements
 - [x] GET /elements/1
 - [ ] POST /elements
 - [ ] PUT /elements/1
-- [ ] DELETE /elements/1
+- [x] DELETE /elements/1
 
 - [x] GET /links
 - [x] GET /links/1
 - [ ] POST /links
 - [ ] PUT /links/1
-- [ ] DELETE /links/1
+- [x] DELETE /links/1
 
 ## Comfort of use
 
