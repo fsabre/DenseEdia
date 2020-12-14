@@ -5,11 +5,6 @@ from denseedia.storage import Edium, orm
 app = Flask(__name__)
 
 
-@app.route("/")
-def hello_world():
-    return "Yep, this is the root."
-
-
 @app.route("/edia", methods=["GET"])
 def get_edia():
     content = []
