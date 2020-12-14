@@ -47,6 +47,15 @@ class Link(db.Entity):
     label = orm.Optional(str)
     creation_date = orm.Required(datetime, default=datetime.now)
 
+    def to_json(self):
+        return {
+            "id": self.id,
+            "start": self.start.id,
+            "end": self.end.id,
+            "has_direction": self.has_direction,
+            "creation_date": self.creation_date.isoformat(),
+        }
+
 
 db.bind(**CONFIG["db"])
 db.generate_mapping(create_tables=True)

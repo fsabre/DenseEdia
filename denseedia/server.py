@@ -1,27 +1,44 @@
 from flask import Flask, jsonify
 
-from denseedia.storage import Edium, orm
+from denseedia.storage import Edium, Element, Link, orm
 
 app = Flask(__name__)
 
 
-@app.route("/edia", methods=["GET"])
-def get_edia():
-    content = []
-    with orm.db_session:
-        for edium in Edium.select():
-            content.append(edium.to_json())
-    return jsonify(content)
-
-
-@app.route("/edia/<int:edium_id>", methods=["GET"])
-def get_one_edium(edium_id):
-    try:
+def generate_get_routes(entity_class, url_base, sing_name, plural_name):
+    def get_entities():
+        content = []
         with orm.db_session:
-            content = Edium[edium_id].to_json()
+            for entity in entity_class.select():
+                content.append(entity.to_json())
         return jsonify(content)
-    except orm.ObjectNotFound:
-        return jsonify({"error": "Non existant ID"}), 404
+
+    app.add_url_rule(
+        rule=url_base,
+        endpoint=f"get_{plural_name}",
+        view_func=get_entities,
+        methods=["GET"],
+    )
+
+    def get_one_entity(entity_id):
+        try:
+            with orm.db_session:
+                content = entity_class[entity_id].to_json()
+            return jsonify(content)
+        except orm.ObjectNotFound:
+            return jsonify({"error": "Non existant ID"}), 404
+
+    app.add_url_rule(
+        rule=url_base + "/<int:entity_id>",
+        endpoint=f"get_one_{sing_name}",
+        view_func=get_one_entity,
+        methods=["GET"],
+    )
+
+
+generate_get_routes(Edium, "/edia", "edium", "edia")
+generate_get_routes(Element, "/elements", "element", "elements")
+generate_get_routes(Link, "/links", "link", "links")
 
 
 @app.route("/edia/<int:edium_id>/elements", methods=["GET"])
