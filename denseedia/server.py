@@ -1,9 +1,28 @@
 import pydantic
-from flask import Flask, jsonify, request, url_for
+from flask import (
+    Flask,
+    Request,
+    abort,
+    jsonify,
+    make_response,
+    request,
+    url_for,
+)
 
 from denseedia.storage import Edium, Element, Link, orm
 
 app = Flask(__name__)
+
+
+def on_json_loading_failed(req, error):
+    abort(
+        make_response(
+            jsonify({"msg": "JSON not valid", "error": error.args[0]}), 400
+        )
+    )
+
+
+Request.on_json_loading_failed = on_json_loading_failed
 
 
 def generate_get_routes(entity_class, url_base, sing_name, plural_name):

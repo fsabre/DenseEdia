@@ -25,7 +25,7 @@
 ## Comfort of use
 
 - [ ] Move the DEBUG variable of the Flask app to the config file
-- [ ] Update the default responses for : 404, 405 and on_json_loading_failed
+- [ ] Update the default responses for : 404 and 405
 - [ ] Write an OpenAPI specification
 
 ## Code quality
