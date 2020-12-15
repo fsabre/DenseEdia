@@ -12,13 +12,13 @@
 
 - [x] GET /elements
 - [x] GET /elements/1
-- [ ] POST /elements
+- [X] POST /elements
 - [ ] PUT /elements/1
 - [x] DELETE /elements/1
 
 - [x] GET /links
 - [x] GET /links/1
-- [ ] POST /links
+- [X] POST /links
 - [ ] PUT /links/1
 - [x] DELETE /links/1
 

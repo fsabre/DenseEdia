@@ -44,6 +44,11 @@ class Element(db.Entity):
             "creation_date": self.creation_date.isoformat(),
         }
 
+    class PostModel(BaseModel):
+        name: str = Field(min_length=1)
+        value: str = Field(min_length=1)
+        edium: int = Field(ge=1)
+
 
 class Link(db.Entity):
     start = orm.Required(Edium)
@@ -60,6 +65,12 @@ class Link(db.Entity):
             "has_direction": self.has_direction,
             "creation_date": self.creation_date.isoformat(),
         }
+
+    class PostModel(BaseModel):
+        start: int = Field(ge=1)
+        end: int = Field(ge=1)
+        has_direction: bool = Field()
+        label: str = Field(default="")
 
 
 db.bind(**CONFIG["db"])
