@@ -150,4 +150,4 @@ generate_delete_route(Link, "/links", "link")
 
 
 def run_server():
-    app.run(debug=True)
+    app.run(debug=True, port=59130)
