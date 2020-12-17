@@ -24,9 +24,10 @@
 
 ## Comfort of use
 
-- [ ] Move the DEBUG variable of the Flask app to the config file
+- [ ] Move the DEBUG and port variable and of the Flask app to the config file
 - [ ] Update the default responses for : 404 and 405
 - [ ] Write an OpenAPI specification
+- [ ] Add the creation_date as an optional field in POST routes
 
 ## Code quality
 
