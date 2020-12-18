@@ -5,6 +5,7 @@ from flask import (
     abort,
     jsonify,
     make_response,
+    render_template,
     request,
     url_for,
 )
@@ -147,6 +148,11 @@ generate_delete_route(Element, "/elements", "element")
 generate_get_routes(Link, "/links", "link", "links")
 generate_post_route(Link, "/links", "link")
 generate_delete_route(Link, "/links", "link")
+
+
+@app.route("/")
+def main():
+    return render_template("Main.html")
 
 
 def run_server():
