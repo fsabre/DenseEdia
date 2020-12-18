@@ -28,6 +28,7 @@
 - [ ] Update the default responses for : 404 and 405
 - [ ] Write an OpenAPI specification
 - [ ] Add the creation_date as an optional field in POST routes
+- [ ] Add a logo and set it as a favicon
 
 ## Code quality
 
