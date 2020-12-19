@@ -71,7 +71,7 @@ var EdiaSelect = function (_React$Component3) {
 
         var _this3 = _possibleConstructorReturn(this, (EdiaSelect.__proto__ || Object.getPrototypeOf(EdiaSelect)).call(this, props));
 
-        _this3.state = { val: "" };
+        _this3.state = { val: "", selected: 0 };
         _this3.on_change = _this3.on_change.bind(_this3);
         _this3.clean = _this3.clean.bind(_this3);
         return _this3;
@@ -80,12 +80,24 @@ var EdiaSelect = function (_React$Component3) {
     _createClass(EdiaSelect, [{
         key: "on_change",
         value: function on_change(event) {
-            this.setState({ val: event.target.value });
+            var value = event.target.value;
+            var try_parse = parseInt(value.split(" ")[0]);
+            if (isNaN(try_parse)) {
+                try_parse = 0;
+            }
+
+            this.setState({
+                val: value,
+                selected: try_parse
+            });
         }
     }, {
         key: "clean",
         value: function clean() {
-            this.setState({ val: "" });
+            this.setState({
+                val: "",
+                selected: 0
+            });
         }
     }, {
         key: "render",
@@ -150,20 +162,32 @@ var EdiaDatalist = function (_React$Component5) {
 
         var _this5 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
 
-        _this5.state = {
-            edia: [{ id: 1, name: "Placeholder1" }, { id: 2, name: "Placeholder2" }, { id: 3, name: "Placeholder3" }]
-        };
+        _this5.state = { edia: [] };
         return _this5;
     }
 
     _createClass(EdiaDatalist, [{
+        key: "componentDidMount",
+        value: function componentDidMount() {
+            var _this6 = this;
+
+            console.log("Fetching edia list...");
+            ajax_request("/edia", "GET", function (res) {
+                _this6.setState({ edia: res });
+            });
+            console.log("Done.");
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
                 "datalist",
                 { className: "EdiaDatalist", id: "edia-datalist" },
                 this.state.edia.map(function (e) {
-                    return React.createElement("option", { key: e.id, value: e.name });
+                    return React.createElement("option", {
+                        key: e.id,
+                        value: e.id + " : " + (e.name ? e.name : "#") + " (" + e.kind + ")"
+                    });
                 })
             );
         }
@@ -171,3 +195,11 @@ var EdiaDatalist = function (_React$Component5) {
 
     return EdiaDatalist;
 }(React.Component);
+
+function ajax_request(url, method, handle_response) {
+    fetch(url, { method: method }).then(function (response) {
+        return response.json();
+    }).then(handle_response).catch(function (err) {
+        console.log("Error on request " + method + " '" + url + "' : " + err);
+    });
+}

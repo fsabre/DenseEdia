@@ -35,17 +35,29 @@ class HalfPanel extends React.Component{
 class EdiaSelect extends React.Component{
     constructor(props){
         super(props);
-        this.state = {val: ""};
+        this.state = {val: "", selected: 0};
         this.on_change = this.on_change.bind(this);
         this.clean = this.clean.bind(this);
     }
 
     on_change(event){
-        this.setState({val: event.target.value});
+        const value = event.target.value;
+        let try_parse = parseInt(value.split(" ")[0]);
+        if(isNaN(try_parse)){
+            try_parse = 0;
+        }
+
+        this.setState({
+            val: value,
+            selected: try_parse
+        });
     }
 
     clean(){
-        this.setState({val: ""});
+        this.setState({
+            val: "",
+            selected: 0
+        });
     }
 
     render(){
@@ -83,20 +95,46 @@ class EdiumDisplay extends React.Component{
 class EdiaDatalist extends React.Component{
     constructor(props){
         super(props);
-        this.state = {
-            edia: [
-                {id: 1, name: "Placeholder1"},
-                {id: 2, name: "Placeholder2"},
-                {id: 3, name: "Placeholder3"}
-            ]
-        };
+        this.state = {edia: []};
+    }
+
+    componentDidMount(){
+        console.log("Fetching edia list...");
+        ajax_request(
+            "/edia",
+            "GET",
+            (res) => {
+                this.setState({edia: res})
+             }
+        );
+        console.log("Done.");
     }
 
     render(){
         return (
             <datalist className="EdiaDatalist" id="edia-datalist">
-                {this.state.edia.map((e) => <option key={e.id} value={e.name}/>)}
+                {
+                    this.state.edia.map((e) => (
+                        <option
+                            key={e.id}
+                            value={`${e.id} : ${e.name ? e.name : "#"} (${e.kind})`}
+                        />
+                    ))
+                }
             </datalist>
         );
     }
+}
+
+
+function ajax_request(url, method, handle_response){
+    fetch(
+        url,
+        { method: method }
+    )
+    .then(response => response.json())
+    .then(handle_response)
+    .catch(
+        err => { console.log(`Error on request ${method} '${url}' : ${err}`); }
+    );
 }
