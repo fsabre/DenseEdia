@@ -44,18 +44,24 @@ var HalfPanel = function (_React$Component2) {
 
         var _this2 = _possibleConstructorReturn(this, (HalfPanel.__proto__ || Object.getPrototypeOf(HalfPanel)).call(this, props));
 
-        _this2.state = { edium: { name: "NamePlaceholder", kind: "KindPlaceholder" } };
+        _this2.state = { selected_edium: 0 };
+        _this2.on_edium_select = _this2.on_edium_select.bind(_this2);
         return _this2;
     }
 
     _createClass(HalfPanel, [{
+        key: "on_edium_select",
+        value: function on_edium_select(edium_id) {
+            this.setState({ selected_edium: edium_id });
+        }
+    }, {
         key: "render",
         value: function render() {
             return React.createElement(
                 "div",
                 { className: "HalfPanel" },
-                React.createElement(EdiaSelect, null),
-                React.createElement(EdiumDisplay, { edium: this.state.edium })
+                React.createElement(EdiaSelect, { on_edium_select: this.on_edium_select }),
+                React.createElement(EdiumDisplay, { edium_id: this.state.selected_edium })
             );
         }
     }]);
@@ -71,7 +77,7 @@ var EdiaSelect = function (_React$Component3) {
 
         var _this3 = _possibleConstructorReturn(this, (EdiaSelect.__proto__ || Object.getPrototypeOf(EdiaSelect)).call(this, props));
 
-        _this3.state = { val: "", selected: 0 };
+        _this3.state = { val: "" };
         _this3.on_change = _this3.on_change.bind(_this3);
         _this3.clean = _this3.clean.bind(_this3);
         return _this3;
@@ -80,24 +86,19 @@ var EdiaSelect = function (_React$Component3) {
     _createClass(EdiaSelect, [{
         key: "on_change",
         value: function on_change(event) {
-            var value = event.target.value;
-            var try_parse = parseInt(value.split(" ")[0]);
-            if (isNaN(try_parse)) {
-                try_parse = 0;
+            var raw_value = event.target.value;
+            var new_id = parseInt(raw_value.split(" ")[0]);
+            if (isNaN(new_id)) {
+                new_id = 0;
             }
-
-            this.setState({
-                val: value,
-                selected: try_parse
-            });
+            this.props.on_edium_select(new_id);
+            this.setState({ val: raw_value });
         }
     }, {
         key: "clean",
         value: function clean() {
-            this.setState({
-                val: "",
-                selected: 0
-            });
+            this.setState({ val: "" });
+            this.props.on_edium_select(0);
         }
     }, {
         key: "render",
@@ -127,20 +128,51 @@ var EdiumDisplay = function (_React$Component4) {
 
         var _this4 = _possibleConstructorReturn(this, (EdiumDisplay.__proto__ || Object.getPrototypeOf(EdiumDisplay)).call(this, props));
 
-        _this4.state = { edium: props.edium };
+        _this4.state = { edium: {} };
         return _this4;
     }
 
     _createClass(EdiumDisplay, [{
+        key: "fetch_content",
+        value: function fetch_content() {
+            var _this5 = this;
+
+            if (this.props.edium_id != 0) {
+                console.log("Fetching Edium n\xB0" + this.props.edium_id);
+                ajax_request("/edia/" + this.props.edium_id, "GET", function (res) {
+                    _this5.setState({ edium: res });
+                });
+                console.log("Done.");
+            }
+        }
+    }, {
+        key: "componentDidUpdate",
+        value: function componentDidUpdate(prev_props) {
+            if (this.props.edium_id != prev_props.edium_id) {
+                this.fetch_content();
+            }
+        }
+    }, {
         key: "render",
         value: function render() {
+            var edium = this.state.edium;
             return React.createElement(
                 "div",
                 { className: "EdiumDisplay" },
-                React.createElement(
+                this.props.edium_id == 0 ? React.createElement(
                     "h2",
                     null,
-                    this.state.edium.name + " (" + this.state.edium.kind + ")"
+                    "No Edium"
+                ) : React.createElement(
+                    "h2",
+                    null,
+                    "Edium n\xB0",
+                    edium.id,
+                    " : ",
+                    edium.name ? edium.name : "#",
+                    " (",
+                    edium.kind,
+                    ")"
                 ),
                 React.createElement(
                     "p",
@@ -160,20 +192,20 @@ var EdiaDatalist = function (_React$Component5) {
     function EdiaDatalist(props) {
         _classCallCheck(this, EdiaDatalist);
 
-        var _this5 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
+        var _this6 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
 
-        _this5.state = { edia: [] };
-        return _this5;
+        _this6.state = { edia: [] };
+        return _this6;
     }
 
     _createClass(EdiaDatalist, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            var _this6 = this;
+            var _this7 = this;
 
             console.log("Fetching edia list...");
             ajax_request("/edia", "GET", function (res) {
-                _this6.setState({ edia: res });
+                _this7.setState({ edia: res });
             });
             console.log("Done.");
         }
@@ -186,7 +218,7 @@ var EdiaDatalist = function (_React$Component5) {
                 this.state.edia.map(function (e) {
                     return React.createElement("option", {
                         key: e.id,
-                        value: e.id + " : " + (e.name ? e.name : "#") + " (" + e.kind + ")"
+                        value: e.id + " " + (e.name ? e.name : '#') + " (" + e.kind + ")"
                     });
                 })
             );
