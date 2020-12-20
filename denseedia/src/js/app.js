@@ -28,10 +28,15 @@ class HalfPanel extends React.Component{
     }
 
     render(){
+        const edium_id = this.state.selected_edium;
         return (
             <div className="HalfPanel">
                 <EdiaSelect on_edium_select={this.on_edium_select}/>
-                <EdiumDisplay edium_id={this.state.selected_edium}/>
+                {
+                    edium_id !== 0
+                    ? <EdiumDisplay edium_id={edium_id}/>
+                    : <BlankEdiumDisplay />
+                }
             </div>
         );
     }
@@ -77,21 +82,19 @@ class EdiumDisplay extends React.Component{
     constructor(props){
         super(props);
         this.state = {edium: {}};
+        this.fetch_content();
     }
 
     fetch_content(){
-        if(this.props.edium_id != 0)
-        {
-            console.log(`Fetching Edium n°${this.props.edium_id}`);
-            ajax_request(
-                `/edia/${this.props.edium_id}`,
-                "GET",
-                (res) => {
-                    this.setState({edium: res})
-                }
-            );
-            console.log("Done.");
-        }
+        console.log(`Fetching Edium n°${this.props.edium_id}`);
+        ajax_request(
+            `/edia/${this.props.edium_id}`,
+            "GET",
+            (res) => {
+                this.setState({edium: res})
+            }
+        );
+        console.log("Done.");
     }
 
     componentDidUpdate(prev_props){
@@ -104,12 +107,19 @@ class EdiumDisplay extends React.Component{
         const edium = this.state.edium;
         return (
             <div className="EdiumDisplay">
-                {
-                    this.props.edium_id == 0
-                    ? <h2>No Edium</h2>
-                    : <h2>Edium n°{edium.id} : {edium.name ? edium.name : "#"} ({edium.kind})</h2>
-                }
+                <h2>Edium n°{edium.id} : {edium.name ? edium.name : "#"} ({edium.kind})</h2>
                 <p>There will be Elements here.</p>
+            </div>
+        );
+    }
+}
+
+class BlankEdiumDisplay extends React.Component{
+    render(){
+        return (
+            <div className="BlankEdiumDisplay">
+                <h2>No Edium</h2>
+                <p>No elements</p>
             </div>
         );
     }

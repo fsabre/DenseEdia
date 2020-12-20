@@ -57,11 +57,12 @@ var HalfPanel = function (_React$Component2) {
     }, {
         key: "render",
         value: function render() {
+            var edium_id = this.state.selected_edium;
             return React.createElement(
                 "div",
                 { className: "HalfPanel" },
                 React.createElement(EdiaSelect, { on_edium_select: this.on_edium_select }),
-                React.createElement(EdiumDisplay, { edium_id: this.state.selected_edium })
+                edium_id !== 0 ? React.createElement(EdiumDisplay, { edium_id: edium_id }) : React.createElement(BlankEdiumDisplay, null)
             );
         }
     }]);
@@ -129,6 +130,7 @@ var EdiumDisplay = function (_React$Component4) {
         var _this4 = _possibleConstructorReturn(this, (EdiumDisplay.__proto__ || Object.getPrototypeOf(EdiumDisplay)).call(this, props));
 
         _this4.state = { edium: {} };
+        _this4.fetch_content();
         return _this4;
     }
 
@@ -137,13 +139,11 @@ var EdiumDisplay = function (_React$Component4) {
         value: function fetch_content() {
             var _this5 = this;
 
-            if (this.props.edium_id != 0) {
-                console.log("Fetching Edium n\xB0" + this.props.edium_id);
-                ajax_request("/edia/" + this.props.edium_id, "GET", function (res) {
-                    _this5.setState({ edium: res });
-                });
-                console.log("Done.");
-            }
+            console.log("Fetching Edium n\xB0" + this.props.edium_id);
+            ajax_request("/edia/" + this.props.edium_id, "GET", function (res) {
+                _this5.setState({ edium: res });
+            });
+            console.log("Done.");
         }
     }, {
         key: "componentDidUpdate",
@@ -159,11 +159,7 @@ var EdiumDisplay = function (_React$Component4) {
             return React.createElement(
                 "div",
                 { className: "EdiumDisplay" },
-                this.props.edium_id == 0 ? React.createElement(
-                    "h2",
-                    null,
-                    "No Edium"
-                ) : React.createElement(
+                React.createElement(
                     "h2",
                     null,
                     "Edium n\xB0",
@@ -186,26 +182,58 @@ var EdiumDisplay = function (_React$Component4) {
     return EdiumDisplay;
 }(React.Component);
 
-var EdiaDatalist = function (_React$Component5) {
-    _inherits(EdiaDatalist, _React$Component5);
+var BlankEdiumDisplay = function (_React$Component5) {
+    _inherits(BlankEdiumDisplay, _React$Component5);
+
+    function BlankEdiumDisplay() {
+        _classCallCheck(this, BlankEdiumDisplay);
+
+        return _possibleConstructorReturn(this, (BlankEdiumDisplay.__proto__ || Object.getPrototypeOf(BlankEdiumDisplay)).apply(this, arguments));
+    }
+
+    _createClass(BlankEdiumDisplay, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "div",
+                { className: "BlankEdiumDisplay" },
+                React.createElement(
+                    "h2",
+                    null,
+                    "No Edium"
+                ),
+                React.createElement(
+                    "p",
+                    null,
+                    "No elements"
+                )
+            );
+        }
+    }]);
+
+    return BlankEdiumDisplay;
+}(React.Component);
+
+var EdiaDatalist = function (_React$Component6) {
+    _inherits(EdiaDatalist, _React$Component6);
 
     function EdiaDatalist(props) {
         _classCallCheck(this, EdiaDatalist);
 
-        var _this6 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
+        var _this7 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
 
-        _this6.state = { edia: [] };
-        return _this6;
+        _this7.state = { edia: [] };
+        return _this7;
     }
 
     _createClass(EdiaDatalist, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            var _this7 = this;
+            var _this8 = this;
 
             console.log("Fetching edia list...");
             ajax_request("/edia", "GET", function (res) {
-                _this7.setState({ edia: res });
+                _this8.setState({ edia: res });
             });
             console.log("Done.");
         }
