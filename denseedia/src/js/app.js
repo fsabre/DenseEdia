@@ -1,8 +1,4 @@
 class App extends React.Component{
-    constructor(props){
-        super(props);
-    }
-
     render(){
         return (
             <div className="App">
@@ -81,20 +77,20 @@ class EdiaSelect extends React.Component{
 class EdiumDisplay extends React.Component{
     constructor(props){
         super(props);
-        this.state = {edium: {}};
+        this.state = {loading: true, edium: {}, elements: []};
         this.fetch_content();
     }
 
     fetch_content(){
         console.log(`Fetching Edium n°${this.props.edium_id}`);
-        ajax_request(
-            `/edia/${this.props.edium_id}`,
-            "GET",
-            (res) => {
-                this.setState({edium: res})
+        const edium_promise = ajax_promise(`/edia/${this.props.edium_id}`, "GET");
+        const elements_promise = ajax_promise(`/edia/${this.props.edium_id}/elements`, "GET");
+        Promise.all([edium_promise, elements_promise]).then(
+            ([res1, res2]) => {
+                console.log("Done. (both requests)");
+                this.setState({loading: false, edium: res1, elements: res2});
             }
         );
-        console.log("Done.");
     }
 
     componentDidUpdate(prev_props){
@@ -104,15 +100,52 @@ class EdiumDisplay extends React.Component{
     }
 
     render(){
+        if(this.state.loading){
+            return <Loading />;
+        }
+
         const edium = this.state.edium;
+
         return (
             <div className="EdiumDisplay">
                 <h2>Edium n°{edium.id} : {edium.name ? edium.name : "#"} ({edium.kind})</h2>
-                <p>There will be Elements here.</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Element name</th>
+                            <th>Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {
+                        this.state.elements.map((e) => {
+                            return (
+                                <ElementDisplay
+                                key={e.id}
+                                name={e.name}
+                                value={e.value}/>
+                            );
+                        })
+                    }
+                    </tbody>
+                </table>
             </div>
         );
     }
 }
+
+
+class ElementDisplay extends React.Component{
+    render(){
+        return (
+            <tr className="ElementDisplay">
+                <td><input type="text" readOnly value={this.props.name}/></td>
+                <td><input type="text" readOnly value={this.props.value}/></td>
+            </tr>
+        );
+    }
+}
+
 
 class BlankEdiumDisplay extends React.Component{
     render(){
@@ -129,22 +162,24 @@ class BlankEdiumDisplay extends React.Component{
 class EdiaDatalist extends React.Component{
     constructor(props){
         super(props);
-        this.state = {edia: []};
+        this.state = {loading: true, edia: []};
     }
 
     componentDidMount(){
         console.log("Fetching edia list...");
-        ajax_request(
-            "/edia",
-            "GET",
+        ajax_promise("/edia", "GET").then(
             (res) => {
-                this.setState({edia: res})
+                console.log("Done.");
+                this.setState({loading: false, edia: res});
              }
         );
-        console.log("Done.");
     }
 
     render(){
+        if(this.state.loading){
+            return <Loading />;
+        }
+
         return (
             <datalist className="EdiaDatalist" id="edia-datalist">
                 {
@@ -161,14 +196,17 @@ class EdiaDatalist extends React.Component{
 }
 
 
-function ajax_request(url, method, handle_response){
-    fetch(
-        url,
-        { method: method }
-    )
-    .then(response => response.json())
-    .then(handle_response)
-    .catch(
-        err => { console.log(`Error on request ${method} '${url}' : ${err}`); }
-    );
+class Loading extends React.Component{
+    render(){
+        return (
+            <div className="Loading">
+                <p>I'm loading right now.</p>
+            </div>
+        );
+    }
+}
+
+
+function ajax_promise(url, method){
+    return fetch(url, {method: method}).then(response => response.json());
 }

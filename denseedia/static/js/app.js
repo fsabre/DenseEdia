@@ -1,3 +1,5 @@
+var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -9,10 +11,10 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var App = function (_React$Component) {
     _inherits(App, _React$Component);
 
-    function App(props) {
+    function App() {
         _classCallCheck(this, App);
 
-        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+        return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
     }
 
     _createClass(App, [{
@@ -129,7 +131,7 @@ var EdiumDisplay = function (_React$Component4) {
 
         var _this4 = _possibleConstructorReturn(this, (EdiumDisplay.__proto__ || Object.getPrototypeOf(EdiumDisplay)).call(this, props));
 
-        _this4.state = { edium: {} };
+        _this4.state = { loading: true, edium: {}, elements: [] };
         _this4.fetch_content();
         return _this4;
     }
@@ -140,10 +142,16 @@ var EdiumDisplay = function (_React$Component4) {
             var _this5 = this;
 
             console.log("Fetching Edium n\xB0" + this.props.edium_id);
-            ajax_request("/edia/" + this.props.edium_id, "GET", function (res) {
-                _this5.setState({ edium: res });
+            var edium_promise = ajax_promise("/edia/" + this.props.edium_id, "GET");
+            var elements_promise = ajax_promise("/edia/" + this.props.edium_id + "/elements", "GET");
+            Promise.all([edium_promise, elements_promise]).then(function (_ref) {
+                var _ref2 = _slicedToArray(_ref, 2),
+                    res1 = _ref2[0],
+                    res2 = _ref2[1];
+
+                console.log("Done. (both requests)");
+                _this5.setState({ loading: false, edium: res1, elements: res2 });
             });
-            console.log("Done.");
         }
     }, {
         key: "componentDidUpdate",
@@ -155,7 +163,12 @@ var EdiumDisplay = function (_React$Component4) {
     }, {
         key: "render",
         value: function render() {
+            if (this.state.loading) {
+                return React.createElement(Loading, null);
+            }
+
             var edium = this.state.edium;
+
             return React.createElement(
                 "div",
                 { className: "EdiumDisplay" },
@@ -171,9 +184,36 @@ var EdiumDisplay = function (_React$Component4) {
                     ")"
                 ),
                 React.createElement(
-                    "p",
+                    "table",
                     null,
-                    "There will be Elements here."
+                    React.createElement(
+                        "thead",
+                        null,
+                        React.createElement(
+                            "tr",
+                            null,
+                            React.createElement(
+                                "th",
+                                null,
+                                "Element name"
+                            ),
+                            React.createElement(
+                                "th",
+                                null,
+                                "Value"
+                            )
+                        )
+                    ),
+                    React.createElement(
+                        "tbody",
+                        null,
+                        this.state.elements.map(function (e) {
+                            return React.createElement(ElementDisplay, {
+                                key: e.id,
+                                name: e.name,
+                                value: e.value });
+                        })
+                    )
                 )
             );
         }
@@ -182,8 +222,40 @@ var EdiumDisplay = function (_React$Component4) {
     return EdiumDisplay;
 }(React.Component);
 
-var BlankEdiumDisplay = function (_React$Component5) {
-    _inherits(BlankEdiumDisplay, _React$Component5);
+var ElementDisplay = function (_React$Component5) {
+    _inherits(ElementDisplay, _React$Component5);
+
+    function ElementDisplay() {
+        _classCallCheck(this, ElementDisplay);
+
+        return _possibleConstructorReturn(this, (ElementDisplay.__proto__ || Object.getPrototypeOf(ElementDisplay)).apply(this, arguments));
+    }
+
+    _createClass(ElementDisplay, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "tr",
+                { className: "ElementDisplay" },
+                React.createElement(
+                    "td",
+                    null,
+                    React.createElement("input", { type: "text", readOnly: true, value: this.props.name })
+                ),
+                React.createElement(
+                    "td",
+                    null,
+                    React.createElement("input", { type: "text", readOnly: true, value: this.props.value })
+                )
+            );
+        }
+    }]);
+
+    return ElementDisplay;
+}(React.Component);
+
+var BlankEdiumDisplay = function (_React$Component6) {
+    _inherits(BlankEdiumDisplay, _React$Component6);
 
     function BlankEdiumDisplay() {
         _classCallCheck(this, BlankEdiumDisplay);
@@ -214,32 +286,36 @@ var BlankEdiumDisplay = function (_React$Component5) {
     return BlankEdiumDisplay;
 }(React.Component);
 
-var EdiaDatalist = function (_React$Component6) {
-    _inherits(EdiaDatalist, _React$Component6);
+var EdiaDatalist = function (_React$Component7) {
+    _inherits(EdiaDatalist, _React$Component7);
 
     function EdiaDatalist(props) {
         _classCallCheck(this, EdiaDatalist);
 
-        var _this7 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
+        var _this8 = _possibleConstructorReturn(this, (EdiaDatalist.__proto__ || Object.getPrototypeOf(EdiaDatalist)).call(this, props));
 
-        _this7.state = { edia: [] };
-        return _this7;
+        _this8.state = { loading: true, edia: [] };
+        return _this8;
     }
 
     _createClass(EdiaDatalist, [{
         key: "componentDidMount",
         value: function componentDidMount() {
-            var _this8 = this;
+            var _this9 = this;
 
             console.log("Fetching edia list...");
-            ajax_request("/edia", "GET", function (res) {
-                _this8.setState({ edia: res });
+            ajax_promise("/edia", "GET").then(function (res) {
+                console.log("Done.");
+                _this9.setState({ loading: false, edia: res });
             });
-            console.log("Done.");
         }
     }, {
         key: "render",
         value: function render() {
+            if (this.state.loading) {
+                return React.createElement(Loading, null);
+            }
+
             return React.createElement(
                 "datalist",
                 { className: "EdiaDatalist", id: "edia-datalist" },
@@ -256,10 +332,35 @@ var EdiaDatalist = function (_React$Component6) {
     return EdiaDatalist;
 }(React.Component);
 
-function ajax_request(url, method, handle_response) {
-    fetch(url, { method: method }).then(function (response) {
+var Loading = function (_React$Component8) {
+    _inherits(Loading, _React$Component8);
+
+    function Loading() {
+        _classCallCheck(this, Loading);
+
+        return _possibleConstructorReturn(this, (Loading.__proto__ || Object.getPrototypeOf(Loading)).apply(this, arguments));
+    }
+
+    _createClass(Loading, [{
+        key: "render",
+        value: function render() {
+            return React.createElement(
+                "div",
+                { className: "Loading" },
+                React.createElement(
+                    "p",
+                    null,
+                    "I'm loading right now."
+                )
+            );
+        }
+    }]);
+
+    return Loading;
+}(React.Component);
+
+function ajax_promise(url, method) {
+    return fetch(url, { method: method }).then(function (response) {
         return response.json();
-    }).then(handle_response).catch(function (err) {
-        console.log("Error on request " + method + " '" + url + "' : " + err);
     });
 }
