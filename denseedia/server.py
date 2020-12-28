@@ -10,6 +10,7 @@ from flask import (
     url_for,
 )
 
+from denseedia.config import CONFIG
 from denseedia.storage import Edium, Element, Link, orm
 
 app = Flask(__name__)
@@ -156,4 +157,5 @@ def main():
 
 
 def run_server():
-    app.run(debug=True, port=59130)
+    flask_config = CONFIG["flask"]
+    app.run(debug=flask_config["debug"], port=flask_config["port"])

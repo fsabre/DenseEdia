@@ -3,5 +3,9 @@
     "provider": "sqlite",
     "filename": "../denseedia.db",
     "create_db": true
+  },
+  "flask": {
+    "debug": true,
+    "port": 59130
   }
 }
