@@ -16,6 +16,18 @@ from denseedia.storage import Edium, Element, Link, orm
 app = Flask(__name__)
 
 
+@app.errorhandler(404)
+def on_route_not_found(error):
+    content = {"msg": "Page not found"}
+    return jsonify(content), 404
+
+
+@app.errorhandler(405)
+def on_method_not_allowed(error):
+    content = {"msg": "Method not allowed"}
+    return jsonify(content), 405
+
+
 def on_json_loading_failed(req, error):
     abort(
         make_response(
