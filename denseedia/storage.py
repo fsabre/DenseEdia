@@ -28,6 +28,7 @@ class Edium(db.Entity):
     class PostModel(BaseModel):
         name: str = Field(default="")
         kind: str = Field(min_length=1)
+        creation_date: datetime = Field(default_factory=datetime.now)
 
 
 class Element(db.Entity):
@@ -48,6 +49,7 @@ class Element(db.Entity):
         name: str = Field(min_length=1)
         value: str = Field(min_length=1)
         edium: int = Field(ge=1)
+        creation_date: datetime = Field(default_factory=datetime.now)
 
 
 class Link(db.Entity):
@@ -71,6 +73,7 @@ class Link(db.Entity):
         end: int = Field(ge=1)
         has_direction: bool = Field()
         label: str = Field(default="")
+        creation_date: datetime = Field(default_factory=datetime.now)
 
 
 db.bind(**CONFIG["db"])
