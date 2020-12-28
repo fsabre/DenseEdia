@@ -29,6 +29,7 @@
 - [ ] Write an OpenAPI specification
 - [ ] Add the creation_date as an optional field in POST routes
 - [ ] Add a logo and set it as a favicon
+- [ ] Check the response code when doing requests
 
 ## Code quality
 
