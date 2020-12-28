@@ -22,14 +22,18 @@ var App = function (_React$Component) {
         value: function render() {
             return React.createElement(
                 "div",
-                { className: "App" },
+                { className: "App w3-container" },
                 React.createElement(
                     "h1",
                     null,
                     "DenseEdia - Main page"
                 ),
-                React.createElement(HalfPanel, null),
-                React.createElement(HalfPanel, null),
+                React.createElement(
+                    "div",
+                    { className: "w3-row" },
+                    React.createElement(HalfPanel, null),
+                    React.createElement(HalfPanel, null)
+                ),
                 React.createElement(EdiaDatalist, null)
             );
         }
@@ -62,7 +66,7 @@ var HalfPanel = function (_React$Component2) {
             var edium_id = this.state.selected_edium;
             return React.createElement(
                 "div",
-                { className: "HalfPanel" },
+                { className: "HalfPanel w3-container w3-col l6 w3-border" },
                 React.createElement(EdiaSelect, { on_edium_select: this.on_edium_select }),
                 edium_id !== 0 ? React.createElement(EdiumDisplay, { edium_id: edium_id }) : React.createElement(BlankEdiumDisplay, null)
             );
@@ -108,14 +112,25 @@ var EdiaSelect = function (_React$Component3) {
         value: function render() {
             return React.createElement(
                 "div",
-                { className: "EdiaSelect" },
+                { className: "EdiaSelect w3-row" },
+                React.createElement(
+                    "h3",
+                    null,
+                    "Select an Edia :"
+                ),
                 React.createElement("input", {
+                    className: "w3-col s10",
                     type: "text",
                     list: "edia-datalist",
                     value: this.state.val,
                     onChange: this.on_change
                 }),
-                React.createElement("input", { type: "button", value: "Clear", onClick: this.clean })
+                React.createElement("input", {
+                    className: "w3-col s2",
+                    type: "button",
+                    value: "Clear",
+                    onClick: this.clean
+                })
             );
         }
     }]);
@@ -322,7 +337,7 @@ var EdiaDatalist = function (_React$Component7) {
                 this.state.edia.map(function (e) {
                     return React.createElement("option", {
                         key: e.id,
-                        value: e.id + " " + (e.name ? e.name : '#') + " (" + e.kind + ")"
+                        value: e.id + " : " + (e.name ? e.name : '#') + " (" + e.kind + ")"
                     });
                 })
             );

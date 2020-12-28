@@ -1,10 +1,12 @@
 class App extends React.Component{
     render(){
         return (
-            <div className="App">
+            <div className="App w3-container">
                 <h1>DenseEdia - Main page</h1>
-                <HalfPanel />
-                <HalfPanel />
+                <div className="w3-row">
+                    <HalfPanel />
+                    <HalfPanel />
+                </div>
                 <EdiaDatalist />
             </div>
         );
@@ -26,7 +28,7 @@ class HalfPanel extends React.Component{
     render(){
         const edium_id = this.state.selected_edium;
         return (
-            <div className="HalfPanel">
+            <div className="HalfPanel w3-container w3-col l6 w3-border">
                 <EdiaSelect on_edium_select={this.on_edium_select}/>
                 {
                     edium_id !== 0
@@ -61,14 +63,21 @@ class EdiaSelect extends React.Component{
 
     render(){
         return (
-            <div className="EdiaSelect">
+            <div className="EdiaSelect w3-row">
+                <h3>Select an Edia :</h3>
                 <input
+                    className="w3-col s10"
                     type="text"
                     list="edia-datalist"
                     value={this.state.val}
                     onChange={this.on_change}
                 />
-                <input type="button" value="Clear" onClick={this.clean}/>
+                <input
+                    className="w3-col s2"
+                    type="button"
+                    value="Clear"
+                    onClick={this.clean}
+                />
             </div>
         );
     }
@@ -186,7 +195,7 @@ class EdiaDatalist extends React.Component{
                     this.state.edia.map((e) => (
                         <option
                             key={e.id}
-                            value={`${e.id} ${e.name ? e.name : '#'} (${e.kind})`}
+                            value={`${e.id} : ${e.name ? e.name : '#'} (${e.kind})`}
                         />
                     ))
                 }
