@@ -12,12 +12,12 @@
 
 - [x] GET /elements
 - [x] GET /elements/1
-- [ ] POST /elements/none
-- [ ] POST /elements/bool
-- [ ] POST /elements/int
-- [ ] POST /elements/float
-- [ ] POST /elements/str
-- [ ] POST /elements/datetime
+- [x] POST /elements/none
+- [x] POST /elements/bool
+- [x] POST /elements/int
+- [x] POST /elements/float
+- [x] POST /elements/str
+- [x] POST /elements/datetime
 - [ ] PUT /elements/1
 - [x] DELETE /elements/1
 
@@ -35,5 +35,6 @@
 
 ## Code quality
 
+- [ ] Improve the readability of `server.py`
 - [ ] Add comments and docstrings
 

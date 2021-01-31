@@ -11,7 +11,17 @@ from flask import (
 )
 
 from denseedia.config import CONFIG
-from denseedia.storage import Edium, Element, Link, orm
+from denseedia.storage import (
+    BoolElement,
+    DatetimeElement,
+    Edium,
+    Element,
+    FloatElement,
+    IntElement,
+    Link,
+    StrElement,
+    orm,
+)
 
 app = Flask(__name__)
 
@@ -70,7 +80,10 @@ def generate_get_routes(entity_class, url_base, sing_name, plural_name):
     )
 
 
-def generate_post_route(entity_class, url_base, sing_name):
+def generate_post_route(entity_class, url_base, sing_name, get_name=None):
+    if get_name is None:
+        get_name = sing_name
+
     def add_one_entity():
         body = request.get_json(force=True)
         try:
@@ -84,7 +97,7 @@ def generate_post_route(entity_class, url_base, sing_name):
                 201,
                 {
                     "Location": url_for(
-                        f"get_one_{sing_name}", entity_id=entity.id
+                        f"get_one_{get_name}", entity_id=entity.id
                     )
                 },
             )
@@ -153,6 +166,16 @@ generate_delete_route(Edium, "/edia", "edium")
 # ELEMENTS ROUTES
 
 generate_get_routes(Element, "/elements", "element", "elements")
+generate_post_route(Element, "/elements/none", "none_element", "element")
+generate_post_route(BoolElement, "/elements/bool", "bool_element", "element")
+generate_post_route(IntElement, "/elements/int", "int_element", "element")
+generate_post_route(
+    FloatElement, "/elements/float", "float_element", "element"
+)
+generate_post_route(StrElement, "/elements/str", "str_element", "element")
+generate_post_route(
+    DatetimeElement, "/elements/datetime", "datetime_element", "element"
+)
 generate_delete_route(Element, "/elements", "element")
 
 # LINKS ROUTES

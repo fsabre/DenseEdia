@@ -115,7 +115,7 @@ class FloatElement(Element):
         float_value: float = Field()
 
 
-class StringElement(Element):
+class StrElement(Element):
     _discriminator_ = 5
     str_value = orm.Required(str)
 
