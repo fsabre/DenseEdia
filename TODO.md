@@ -12,7 +12,12 @@
 
 - [x] GET /elements
 - [x] GET /elements/1
-- [X] POST /elements
+- [ ] POST /elements/none
+- [ ] POST /elements/bool
+- [ ] POST /elements/int
+- [ ] POST /elements/float
+- [ ] POST /elements/str
+- [ ] POST /elements/datetime
 - [ ] PUT /elements/1
 - [x] DELETE /elements/1
 

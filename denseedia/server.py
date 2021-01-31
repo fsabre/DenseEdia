@@ -153,7 +153,6 @@ generate_delete_route(Edium, "/edia", "edium")
 # ELEMENTS ROUTES
 
 generate_get_routes(Element, "/elements", "element", "elements")
-generate_post_route(Element, "/elements", "element")
 generate_delete_route(Element, "/elements", "element")
 
 # LINKS ROUTES
