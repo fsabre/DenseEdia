@@ -1,7 +1,7 @@
 {
   "db": {
     "provider": "sqlite",
-    "filename": "../denseedia.db",
+    "filename": "denseedia.db",
     "create_db": true
   },
   "flask": {

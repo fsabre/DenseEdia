@@ -3,7 +3,7 @@ from datetime import datetime
 from pony import orm
 from pydantic import BaseModel, Field
 
-from denseedia.config import CONFIG
+from denseedia.config import CONFIG, ROOT_PATH
 
 db = orm.Database()
 
@@ -181,5 +181,7 @@ class Link(db.Entity):
         creation_date: datetime = Field(default_factory=datetime.now)
 
 
-db.bind(**CONFIG["db"])
+db_config = CONFIG["db"]
+rel_filename = db_config.pop("filename")
+db.bind(**db_config, filename=str(ROOT_PATH.joinpath(rel_filename).absolute()))
 db.generate_mapping(create_tables=True)
