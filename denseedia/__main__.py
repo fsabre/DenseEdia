@@ -1,3 +1,3 @@
-from denseedia.server import run_server
+from denseedia.app import run_server
 
 run_server()
