@@ -66,6 +66,34 @@ def post_for(entity_class, location_func_name):
     return add_one_entity
 
 
+def patch_for(entity_class):
+    def modify_entity(entity_id):
+        body = request.get_json(force=True)
+        try:
+            sanitized_dict = entity_class.PatchModel(**body).dict()
+            trimmed = {k: v for k, v in sanitized_dict.items() if k in body}
+            with orm.db_session:
+                entity = entity_class[entity_id]
+                for key, value in trimmed.items():
+                    setattr(entity, key, value)
+                orm.commit()
+                content = entity.to_json()
+            return jsonify(content), 200
+        except orm.ObjectNotFound as err:
+            return jsonify({"msg": "Non existant ID"}), 404
+        except (pydantic.ValidationError, ValueError) as err:
+            content = {"msg": "Data not valid"}
+            return jsonify(content), 400
+        except orm.TransactionIntegrityError as err:
+            if "FOREIGN KEY constraint failed" in err.args[0]:
+                content = {"msg": "Some of the provided IDs are non-existant"}
+                return jsonify(content), 400
+            else:
+                raise
+
+    return modify_entity
+
+
 def delete_for(entity_class):
     def delete_one_entity(entity_id):
         try:
@@ -97,6 +125,12 @@ def register_routes(app):
         methods=["POST"],
         endpoint="post_edium",
         view_func=post_for(Edium, "get_one_edium"),
+    )
+    app.add_url_rule(
+        rule="/edia/<int:entity_id>",
+        methods=["PATCH"],
+        endpoint="patch_edium",
+        view_func=patch_for(Edium),
     )
     app.add_url_rule(
         rule="/edia/<int:entity_id>",

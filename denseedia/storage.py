@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import Optional
 
 from pony import orm
 from pydantic import BaseModel, Field
@@ -29,6 +30,11 @@ class Edium(db.Entity):
         name: str = Field(default="")
         kind: str = Field(min_length=1)
         creation_date: datetime = Field(default_factory=datetime.now)
+
+    class PatchModel(BaseModel):
+        name: Optional[str] = Field()
+        kind: Optional[str] = Field(min_length=1)
+        creation_date: Optional[datetime] = Field()
 
 
 class Element(db.Entity):

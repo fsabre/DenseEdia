@@ -7,7 +7,7 @@
 - [x] GET /edia/elements
 - [ ] GET /edia/links
 - [x] POST /edia
-- [ ] PUT /edia/1
+- [x] PATCH /edia/1
 - [x] DELETE /edia/1
 
 - [x] GET /elements
@@ -18,13 +18,13 @@
 - [x] POST /elements/float
 - [x] POST /elements/str
 - [x] POST /elements/datetime
-- [ ] PUT /elements/1
+- [ ] PATCH /elements/1
 - [x] DELETE /elements/1
 
 - [x] GET /links
 - [x] GET /links/1
 - [X] POST /links
-- [ ] PUT /links/1
+- [ ] PATCH /links/1
 - [x] DELETE /links/1
 
 ## Comfort of use
@@ -35,6 +35,5 @@
 
 ## Code quality
 
-- [ ] Improve the readability of `server.py`
 - [ ] Add comments and docstrings
 
