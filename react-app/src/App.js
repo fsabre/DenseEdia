@@ -1,5 +1,7 @@
 import React from "react";
 
+import { EdiaDatalist } from "./components/EdiaDatalist";
+
 const DENSEEDIA_URL = "http://localhost:59130";
 
 class App extends React.Component {
@@ -167,43 +169,6 @@ class BlankEdiumDisplay extends React.Component {
         <h2>No Edium</h2>
         <p>No elements</p>
       </div>
-    );
-  }
-}
-
-
-class EdiaDatalist extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { loading: true, edia: [] };
-  }
-
-  componentDidMount() {
-    console.log("Fetching edia list...");
-    ajax_promise("/edia", "GET").then(
-      (res) => {
-        console.log("Done.");
-        this.setState({ loading: false, edia: res });
-      }
-    );
-  }
-
-  render() {
-    if (this.state.loading) {
-      return <Loading />;
-    }
-
-    return (
-      <datalist className="EdiaDatalist" id="edia-datalist">
-        {
-          this.state.edia.map((e) => (
-            <option
-              key={e.id}
-              value={`${e.id} : ${e.name ? e.name : '#'} (${e.kind})`}
-            />
-          ))
-        }
-      </datalist>
     );
   }
 }
