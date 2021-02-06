@@ -1,7 +1,7 @@
 """Generate and register the routes"""
 
 import pydantic
-from flask import jsonify, render_template, request, url_for
+from flask import jsonify, request, url_for
 from pony import orm
 
 from denseedia.storage import (
@@ -247,7 +247,3 @@ def register_routes(app):
         endpoint="delete_link",
         view_func=delete_for(Link),
     )
-
-    @app.route("/")
-    def main():
-        return render_template("Main.html")

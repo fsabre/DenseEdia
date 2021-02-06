@@ -30,6 +30,14 @@ def on_json_loading_failed(req, error):
 
 Request.on_json_loading_failed = on_json_loading_failed
 
+
+@app.after_request
+def fix_cors(response):
+    """Allow the React App to access the API."""
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:59131"
+    return response
+
+
 register_routes(app)
 
 
