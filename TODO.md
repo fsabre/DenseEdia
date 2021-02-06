@@ -27,6 +27,10 @@
 - [ ] PATCH /links/1
 - [x] DELETE /links/1
 
+## Bugs
+
+- [ ] When PATCHing an Entity with a DateTime that has a `tzinfo`, the value is stored as a str. It is a Pony issue (#434).
+
 ## Comfort of use
 
 - [ ] Write an OpenAPI specification
