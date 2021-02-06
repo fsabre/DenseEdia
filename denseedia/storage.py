@@ -87,7 +87,7 @@ class BoolElement(Element):
 
 
 class IntElement(Element):
-    _discriminator_ = 3
+    _discriminator_ = 2
     int_value = orm.Required(int)
 
     def to_json(self):
@@ -111,7 +111,7 @@ class IntElement(Element):
 
 
 class FloatElement(Element):
-    _discriminator_ = 4
+    _discriminator_ = 3
     float_value = orm.Required(float)
 
     def to_json(self):
@@ -135,7 +135,7 @@ class FloatElement(Element):
 
 
 class StrElement(Element):
-    _discriminator_ = 5
+    _discriminator_ = 4
     str_value = orm.Required(str)
 
     def to_json(self):
@@ -159,7 +159,7 @@ class StrElement(Element):
 
 
 class DatetimeElement(Element):
-    _discriminator_ = 6
+    _discriminator_ = 5
     datetime_value = orm.Required(datetime)
 
     def to_json(self):
