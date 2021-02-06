@@ -18,13 +18,13 @@
 - [x] POST /elements/float
 - [x] POST /elements/str
 - [x] POST /elements/datetime
-- [ ] PATCH /elements/1
+- [x] PATCH /elements/1
 - [x] DELETE /elements/1
 
 - [x] GET /links
 - [x] GET /links/1
 - [X] POST /links
-- [ ] PATCH /links/1
+- [x] PATCH /links/1
 - [x] DELETE /links/1
 
 ## Bugs

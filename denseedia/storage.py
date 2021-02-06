@@ -62,6 +62,10 @@ class Element(db.Entity):
         edium: int = Field(ge=1)
         creation_date: datetime = Field(default_factory=datetime.now)
 
+    class PatchModel(BaseModel):
+        name: Optional[str] = Field()
+        creation_date: Optional[datetime] = Field()
+
 
 class BoolElement(Element):
     _discriminator_ = 1
@@ -77,6 +81,9 @@ class BoolElement(Element):
 
     class PostModel(Element.PostModel):
         bool_value: bool = Field()
+
+    class PatchModel(Element.PatchModel):
+        bool_value: Optional[bool] = Field()
 
 
 class IntElement(Element):
@@ -99,6 +106,9 @@ class IntElement(Element):
     class PostModel(Element.PostModel):
         int_value: int = Field()
 
+    class PatchModel(Element.PatchModel):
+        int_value: Optional[int] = Field()
+
 
 class FloatElement(Element):
     _discriminator_ = 4
@@ -119,6 +129,9 @@ class FloatElement(Element):
 
     class PostModel(Element.PostModel):
         float_value: float = Field()
+
+    class PatchModel(Element.PatchModel):
+        float_value: Optional[float] = Field()
 
 
 class StrElement(Element):
@@ -141,6 +154,9 @@ class StrElement(Element):
     class PostModel(Element.PostModel):
         str_value: str = Field()
 
+    class PatchModel(Element.PatchModel):
+        str_value: Optional[str] = Field()
+
 
 class DatetimeElement(Element):
     _discriminator_ = 6
@@ -162,6 +178,9 @@ class DatetimeElement(Element):
     class PostModel(Element.PostModel):
         datetime_value: datetime = Field()
 
+    class PatchModel(Element.PatchModel):
+        datetime_value: Optional[datetime] = Field()
+
 
 class Link(db.Entity):
     start = orm.Required(Edium)
@@ -176,6 +195,7 @@ class Link(db.Entity):
             "start": self.start.id,
             "end": self.end.id,
             "has_direction": self.has_direction,
+            "label": self.label,
             "creation_date": self.creation_date.isoformat(),
         }
 
@@ -185,6 +205,10 @@ class Link(db.Entity):
         has_direction: bool = Field()
         label: str = Field(default="")
         creation_date: datetime = Field(default_factory=datetime.now)
+
+    class PatchModel(BaseModel):
+        label: Optional[str] = Field()
+        creation_date: Optional[datetime] = Field()
 
 
 db_config = CONFIG["db"]

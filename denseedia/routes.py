@@ -54,6 +54,7 @@ def post_for(entity_class, location_func_name):
                 {"Location": url_for(location_func_name, entity_id=entity.id)},
             )
         except pydantic.ValidationError as err:
+            print(f"{err!r}")
             content = {"msg": "Data not valid"}
             return jsonify(content), 400
         except orm.TransactionIntegrityError as err:
@@ -70,10 +71,11 @@ def patch_for(entity_class):
     def modify_entity(entity_id):
         body = request.get_json(force=True)
         try:
-            sanitized = entity_class.PatchModel(**body)
-            trimmed = {k: v for k, v in sanitized if k in body}
             with orm.db_session:
+                # Retrieve the entity first to know its subclass
                 entity = entity_class[entity_id]
+                sanitized = entity.PatchModel(**body)
+                trimmed = {k: v for k, v in sanitized if k in body}
                 for key, value in trimmed.items():
                     setattr(entity, key, value)
                 orm.commit()
@@ -82,6 +84,7 @@ def patch_for(entity_class):
         except orm.ObjectNotFound as err:
             return jsonify({"msg": "Non existant ID"}), 404
         except (pydantic.ValidationError, ValueError) as err:
+            print(f"{err!r}")
             content = {"msg": "Data not valid"}
             return jsonify(content), 400
         except orm.TransactionIntegrityError as err:
@@ -202,6 +205,12 @@ def register_routes(app):
     )
     app.add_url_rule(
         rule="/elements/<int:entity_id>",
+        methods=["PATCH"],
+        endpoint="patch_element",
+        view_func=patch_for(Element),
+    )
+    app.add_url_rule(
+        rule="/elements/<int:entity_id>",
         methods=["DELETE"],
         endpoint="delete_element",
         view_func=delete_for(Element),
@@ -225,6 +234,12 @@ def register_routes(app):
         methods=["POST"],
         endpoint="post_link",
         view_func=post_for(Link, "get_one_link"),
+    )
+    app.add_url_rule(
+        rule="/links/<int:entity_id>",
+        methods=["PATCH"],
+        endpoint="patch_link",
+        view_func=patch_for(Link),
     )
     app.add_url_rule(
         rule="/links/<int:entity_id>",
