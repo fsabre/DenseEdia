@@ -70,8 +70,8 @@ def patch_for(entity_class):
     def modify_entity(entity_id):
         body = request.get_json(force=True)
         try:
-            sanitized_dict = entity_class.PatchModel(**body).dict()
-            trimmed = {k: v for k, v in sanitized_dict.items() if k in body}
+            sanitized = entity_class.PatchModel(**body)
+            trimmed = {k: v for k, v in sanitized if k in body}
             with orm.db_session:
                 entity = entity_class[entity_id]
                 for key, value in trimmed.items():
