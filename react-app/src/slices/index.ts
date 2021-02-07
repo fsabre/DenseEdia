@@ -1,8 +1,10 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit';
 
-import { summarySlice } from "./summary";
+import { slotSlice } from "./SlotSlice";
+import { summarySlice } from "./SummarySlice";
 
 const rootReducer = combineReducers({
+  "slot": slotSlice.reducer,
   "summary": summarySlice.reducer,
 });
 

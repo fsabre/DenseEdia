@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../slices";
 
-import { summarySliceThunks } from "../slices/summary";
+import { summarySliceThunks } from "../slices/SummarySlice";
 
 interface EdiaDatalistProp { }
 
@@ -17,8 +17,8 @@ function EdiaDatalist(props: EdiaDatalistProp) {
     }
   })
 
-  if (loadedState === "loading") {
-    return <p>Loading...</p>;
+  if (loadedState !== "yes") {
+    return <></>;
   }
   return (
     <datalist className="EdiaDatalist" id="edia-datalist">
