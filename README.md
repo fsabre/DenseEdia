@@ -27,10 +27,56 @@ The advantages of DenseEdia are the following :
 
 ## Installation
 
-TODO
+Start by cloning the project on your computer :
+
+```bash
+git clone https://github.com/fsabre/DenseEdia.git
+cd DenseEdia
+```
+
+### The server
+
+Create a virtual environment for Python :
+
+```bash
+python3 -m venv venv
+```
+
+Activate it and install the dependencies :
+
+```bash
+source venv/bin/activate
+pip install -r requirements.txt
+```
+
+Run the server :
+
+```bash
+python -m denseedia
+```
+
+### The React Web interface
+
+Install the dependencies :
+
+```bash
+cd react-app
+npm install
+```
+
+Build a production version :
+
+```bash
+npm run build
+```
+
+Run the built version on port 59131 :
+
+```bash
+npm install serve
+serve -s build -l 59131
+```
 
 ## API specification
 
 TODO
-
-
