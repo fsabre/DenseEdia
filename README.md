@@ -1,3 +1,5 @@
+⚠ **This version of DenseEdia is dropped for now. Please go see https://github.com/fsabre/DenseEdia-Progressive for the updated project.**
+
 # DenseEdia
 
 A tool that let you store what you want, as a graph.
